@@ -1,0 +1,13 @@
+Hi {{ user.name }},
+
+You just completed a {{ exam.get_category_display }} mock exam
+({{ exam.get_language_used_display }}).
+
+Score: {{ exam.score }} / {{ exam.total_questions }}
+
+Open the app to review your answers and the correct answers for any
+questions you missed.
+
+Keep practicing - good luck on your LTO exam!
+
+- LTO Exam Reviewer Team

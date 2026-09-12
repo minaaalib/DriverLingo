@@ -1,0 +1,102 @@
+question_id,question_en,correct_answer,verdict,system_guess,agrees_with_system,notes
+1,"When using the basic speed law as a guide, the choice of speed is based on the:",c,certain,a,no,Explanation states speed limits are based on traffic and overall road condition.
+2,"What documents must you carry along whenever you drive a ""for hire"" vehicle?",b,certain,b,yes,A 'for hire' vehicle requires a Professional driver's license plus current OR/CR.
+3,Having a license is:,c,certain,n/a (not flagged),n/a,"Driving is a privilege granted by the State, not a right; explanation says so verbatim."
+4,The safest speed of a vehicle is according to:,b,certain,n/a (not flagged),n/a,Explanation: always consider road and weather conditions before choosing speed.
+5,A public utility vehicle can only be driven by holder of a:,c,certain,c,yes,Explanation: PUVs/PUJs may only be driven with a professional driver's license.
+6,When may you lend your driver's license?,a,certain,b,no,Explanation: a license may only be used by the person named/pictured on it - never lend it.
+7,The license issued to a driver shall entitle him to operate:,c,certain,a,no,Explanation: LTO licenses specify the vehicle types allowed per restriction code.
+8,Chances of being hurt or killed while driving/riding are reduced if one is wearing:,c,certain,b,no,"Explanation cites the seat belt; option (c) 'seat belts/helmets' is the only choice covering it (a is helmet-only, b is irrelevant)."
+9,A good driving attitude of a driver is to:,b,certain,a,no,Explanation is entirely about defensive driving.
+10,"Which of the following are not considered ""highways""?",b,certain,c,no,"RA 4136 defines highway to include parks, alleys, boulevards, driveways and avenues; roadways on private property are NOT highways - matches the explanation about private roads."
+11,According to the Philippine Clean Air Act of 1999 (R.A. No. 8749):,c,certain,c,yes,RA 8749 Sec. 4 recognizes that every citizen has the right to breathe clean air.
+12,A safe speed to drive your car under adverse conditions depends on:,a,uncertain,n/a (not flagged),n/a,"Explanation frames the authorized/imposed speed limit as the reference point you adjust downward from; no option maps cleanly, (a) is the best fit. Flagged for human review."
+13,It is more dangerous to drive at the maximum speed limit at night than during daytime because:,c,certain,a,no,"Explanation: at night with poor lighting you cannot see far ahead, so max speed is unsafe."
+14,Children must be held in approved child restraint if they are:,b,certain,b,yes,Explanation explicitly states 6 years old and below require a child restraint.
+15,The main reasons for requiring a motor vehicle inspection is to:,c,certain,a,no,Explanation: inspection is done to ensure the vehicle is in good and safe condition.
+16,The speed limit signs along the roadways should be thought of as:,a,certain,a,yes,Explanation: posted limits assume the road is in its best condition.
+17,"If the driver will be under medication, he should:",b,certain,a,no,Explanation: consult your doctor if unsure about medication effects.
+18,Which of the following can you adjust in order to reduce the chance of collision?,a,certain,c,no,Explanation: you can only control your own speed and road position.
+19,What documents must you always bring while driving?,c,certain,n/a (not flagged),n/a,"Explanation lists license, vehicle registration (CR) and the latest LTO payment receipt (OR)."
+20,What should you prepare for a long trip?,c,certain,b,no,"Explanation lists BOTH planning the route/vehicle condition AND preparing the toolbox, so 'both answers are correct'."
+21,"The purpose of traffic laws, rules and regulations is to:",b,certain,c,no,Explanation: traffic rules exist for organizational and safety reasons - orderly movement of vehicles and pedestrians.
+22,A driver is considered a professional if:,c,certain,a,no,Explanation: professional drivers are those who drive for a living (paid).
+23,To have one's driver's license suspended means to:,c,certain,a,no,Suspension = license taken temporarily; permanent taking is revocation.
+24,The Director of the LTO may suspend/revoke a driver's license when:,c,certain,n/a (not flagged),n/a,"Both listed grounds (crime accessory; three convictions in 12 months) are valid, matching the explanation."
+25,Night driving is dangerous because:,c,certain,b,no,Explanation: at night visibility ahead is reduced.
+26,Seatbelts must be worn by children aged:,b,certain,n/a (not flagged),n/a,Explanation explicitly states passengers aged 7 and above must wear seatbelts.
+27,The Temporary Operators Permit (TOP) authorizes the apprehended driver to operate motor vehicle for a period not exceeding:,c,certain,n/a (not flagged),n/a,Explanation explicitly states a TOP is valid for 72 hours.
+28,The speed limit prescribed by law does not apply to a driver:,b,certain,b,yes,Explanation: law enforcers in pursuit of a criminal are exempt from speed limits.
+29,Public Service Law prohibits public utility driver to converse with his passengers while the vehicle is:,c,certain,n/a (not flagged),n/a,Public Service Law bars PUV drivers from conversing with passengers while the vehicle is in motion.
+30,Are children below 6 years old allowed to sit in the passenger seat beside the driver?,b,certain,a,no,"Explanation describes the penalty for the act, i.e. it is prohibited; RA 11229 also bars young children from the front seat, so the answer is 'No'."
+31,The minimum age for the applicant of Professional driver's license is:,b,certain,n/a (not flagged),n/a,Explanation explicitly states 18 years old minimum for a professional license.
+32,Who are required to wear a prescribed helmet?,c,certain,c,yes,Explanation: all motorcycle riders must wear helmets bearing an ICC sticker.
+33,Ignoring traffic lights during late night could:,b,certain,a,no,Explanation warns that ignoring signs at night is unsafe - it can cause a fatal accident.
+34,Which of the following is the maximum speed limit on expressway for cars?,c,certain,a,no,Explanation explicitly states 100 kph max on expressways for cars.
+35,Non-professional license is only for:,b,certain,n/a (not flagged),n/a,Explanation: non-professional licenses cover private vehicles only.
+36,"To obtain one’s driver’s license, one must be at least:",b,certain,n/a (not flagged),n/a,Explanation explicitly states the earliest age is 17 (non-professional).
+37,It refers to any land transportation vehicles propelled by any other power than muscular power.,c,certain,n/a (not flagged),n/a,Definition of a motor vehicle under RA 4136 - propelled by other than muscular power.
+38,A pre-trip inspection should be completed:,c,certain,b,no,Explanation: a pre-trip inspection must be done BEFORE hitting the road.
+39,"In traffic direction and control, when both the traffic lights and law enforcer are directing traffic, which will you follow to avoid confusion?",a,certain,a,yes,Explanation: traffic enforcers overrule traffic lights.
+40,The deadline to renew the registration of a motor vehicle is:,c,certain,a,no,Explanation: renewal schedule follows the last digit of the plate number (last working day of that month).
+41,Drivers gather most information using their:,b,certain,a,no,Explanation: drivers get the most information through vision.
+42,One that affects your visibility while driving is?,a,certain,a,yes,Explanation says all three affect visibility but singles out headlights as the one you control.
+43,The three colors of the traffic lights are:,a,certain,a,yes,"Standard traffic light colors: red, yellow, green."
+44,Yellow triangular signs provide what kind of information?,a,certain,a,yes,Explanation: yellow triangular signs alert drivers to dangers ahead - warning signs.
+45,Which of the following traffic signs are blue?,b,certain,a,no,Explanation describes blue signs as giving helpful information/directions - information signs.
+46,Steady green light means:,b,certain,c,no,Explanation: green means you may go when the way is clear and it is safe.
+47,A flashing yellow light at a road crossing signifies:,a,certain,a,yes,Explanation: flashing yellow means slow down and proceed with caution.
+48,A solid white line on the right edge of the highway slopes in towards your left. This shows that:,b,certain,b,yes,Explanation: a slanting edge line means the roadway narrows ahead.
+49,Double solid yellow lane lines:,b,certain,a,no,Explanation: double solid yellow lines may not be crossed in either direction at any time.
+50,"Under what circumstances should you sound your ""horn""?",a,certain,a,yes,"Explanation: the horn is only for warning others of danger, not for use in school/hospital zones."
+51,What does the lane require you to do upon approaching an intersection with a stop sign?,b,certain,b,yes,"A stop sign requires a complete stop, then proceed when safe."
+52,"The road sign ""Do Not Enter"" is a:",a,certain,n/a (not flagged),n/a,'Do Not Enter' issues a mandatory prohibition - a regulatory sign.
+53,The Right-of-Way law provides us with:,b,certain,c,no,Explanation: right-of-way law defines who goes first and who yields.
+54,"At rotundas, which of the following vehicles have the right-of-way?",b,certain,b,yes,Explanation: vehicles already inside the rotunda have the right-of-way.
+55,The driver of a car traveling on a highway is required to yield to:,b,certain,a,no,Explanation is entirely about yielding to pedestrians.
+56,"If there are pedestrians on a school crossing, you are required to:",c,certain,a,no,Explanation: stop and wait until ALL pedestrians have completely cleared the crossing.
+57,Should a driver turning at an intersection give way to pedestrians?,a,certain,a,yes,Explanation: a driver turning right or left must always yield to pedestrians.
+58,You should change lanes only after you have:,a,certain,b,no,Explanation requires BOTH signalling and checking traffic before changing lanes.
+59,"When driving on the highway at night, you should use low beam headlights (dim lights) when:",c,certain,b,no,"Explanation names both situations (other driver dims; blinded by oncoming lights), so 'all of the above'."
+60,"If the brake lights of several cars ahead of you flash on, you should:",a,certain,a,yes,Explanation: ease off the accelerator and prepare to brake smoothly.
+61,What light shall be used when vehicles are parked on the highway at night?,b,certain,b,yes,Explanation: use parking lights or low-beam headlights when parked at night.
+62,You may never park:,a,certain,n/a (not flagged),n/a,Parking on a crosswalk is absolutely prohibited; one-way streets and 5 m from a hydrant are situational.
+63,"When loading or unloading passengers, we usually stop at the:",a,certain,a,yes,Explanation: stop at the right side of the road nearest the sidewalk.
+64,A driver may load and unload passengers:,a,certain,n/a (not flagged),n/a,Explanation: loading/unloading only at designated stops.
+65,"Whenever you leave the car unattended, the law says that you stop the engine and:",a,certain,n/a (not flagged),n/a,Explanation: turn off the engine and properly set the hand brake.
+66,The speed limit within a school zone during school days is:,a,certain,n/a (not flagged),n/a,Explanation explicitly states 20 kph in school zones.
+67,"When following behind another car, it is considered a safe rule to allow at least:",c,certain,n/a (not flagged),n/a,Explanation names the 'one car length per 10 mph' rule.
+68,Which of the following should you do if you feel drowsy while driving?,a,certain,a,yes,Explanation: pull over safely and rest when drowsy.
+69,"When approaching sharp curve on the highway, you should:",a,certain,n/a (not flagged),n/a,Explanation: slow down BEFORE entering the curve.
+70,Which of the following can you adjust in order to reduce the chance of collision?,a,certain,n/a (not flagged),n/a,Explanation: you can only control your own speed and lane position.
+71,"To avoid suspension or revocation, how many days must a driver with an apprehended license settle his case with LTO?",a,certain,n/a (not flagged),n/a,Explanation explicitly states the case must be settled within 15 days.
+72,"The most effective way to deal with a ""tailgater"" is to:",b,certain,b,yes,Explanation: slow down slightly and let the tailgater pass.
+73,"When approaching an intersection and the roadway beyond is blocked with traffic, you should:",c,uncertain,b,no,"CONFLICT: the doc's explanation argues for (b) creeping into the intersection, but RA 4136 and standard LTO answer keys require stopping BEFORE the intersection when the far side is blocked (no blocking the box). Answered (c) on the law; the reviewer's explanation text should be corrected."
+74,"As you drive, your glances to the side and rear-view mirrors should be:",a,certain,b,no,Explanation: mirror checks should be quick/brief.
+75,Which of the following is most recommended in a way of dealing with fatigue on a long trip?,a,certain,a,yes,Explanation: take regular breaks to rest; pills and heavy eating are rejected.
+76,Those who are caught under the influence of prohibited drugs or alcohol while driving shall be penalized with:,a,certain,c,no,"Explanation states drivers face BOTH license suspension/revocation AND fines or jail, so 'both answers are correct'."
+77,A privately registered car utilized for hire and carriage of passengers or cargoes is a colorum vehicle and is prohibited by law. Drivers caught operating such vehicle for the first time is penalized by:,a,certain,c,no,"Explanation gives no figure; the standard LTO penalty for a driver's first colorum offense is a Php 2,000 fine plus 3-month license suspension. (b) cancellation is too severe for a first offense and (c) Php 500 far too light."
+78,"It refers to an act penalizing person under the influence of alcohol, dangerous drugs, and similar substances, and for other purpose.",a,certain,n/a (not flagged),n/a,"RA 10586 is the Anti-Drunk and Drugged Driving Act of 2013, named in the explanation."
+79,It refers to standardized tests to initially assess and determine intoxication.,a,certain,n/a (not flagged),n/a,Explanation names the Field Sobriety Test.
+80,"A type of field sobriety test that requires the driver to walk heel-to-toe along a straight line for nine (9) steps, turn at the end and return to the point of origin without any difficulty. What is this test called?",c,certain,a,no,The standardized heel-to-toe nine-step test is the Walk-and-Turn; (a) and (b) are not real tests.
+81,What is the maximum penalty for driving under the influence of liquor or prohibited drugs?,b,certain,n/a (not flagged),n/a,Explanation: the maximum penalty is permanent revocation of the driver's license.
+82,Driving with a fake license is prohibited and is punishable by:,c,certain,c,yes,Explanation: the law imposes BOTH a fine and a suspension - only (c) contains both.
+83,"You were apprehended because you were engaged in car racing while driving in a super highway, what traffic violation did you commit?",a,certain,a,yes,Racing/speed contest on a highway is charged as reckless driving under LTO rules (PD 1865 supplies the fine cited).
+84,"If the driver is using a motor vehicle in committing a crime and is convicted, his driver’s license shall be:",a,certain,a,yes,Explanation: the license is permanently revoked plus a fine.
+85,What traffic violation have you committed if you pick-up passengers on prohibited zones?,c,certain,c,yes,Explanation: loading in prohibited zones blocks traffic flow - obstruction.
+86,It refers to measure of amount of alcohol in a person’s blood.,a,certain,a,yes,"BAC = blood alcohol concentration, as spelled out in the explanation."
+87,Operating a public utility vehicle equipped with stereo-music is punishable by:,a,certain,a,yes,"Explanation says the law imposes a fine; (a) is the only fine option (Php 1,000)."
+88,The motor vehicle plate and driver's license may be confiscated by any authorized LTO agent when the vehicle being operated is found to be:,a,certain,a,yes,"Explanation: plates/licenses are confiscated when the vehicle is not roadworthy - unsafe, defective, dilapidated."
+89,"You were flagged down due to noisy muffler of your motorcycle, what will you do?",b,certain,a,no,Explanation: the rider must reinstall the original/stock muffler to comply. Bribery (a) is itself a crime.
+90,You are in a no-passing zone when the center of the road is marked by:,c,certain,a,no,Explanation describes a no-passing marking in both directions = two solid yellow lines.
+91,"When you do not see the wheels of the vehicles in front of you, should you do?",a,certain,c,no,Explanation: you are too close - slow down and restore a safe following distance.
+92,A person whose driver's license is under suspension may:,b,certain,b,yes,Explanation: a suspended license means no driving under any condition.
+93,What should you do when approaching a curve?,b,certain,a,no,Explanation: reduce speed before the curve; abrupt braking is explicitly rejected.
+94,What is considered as a parking violation?,c,certain,b,no,Explanation is entirely about parking too close to a signalized intersection.
+95,Where do you have to stop at a traffic light?,a,certain,n/a (not flagged),n/a,Explanation: stop before and close to the stop line.
+96,What is the meaning of a blinking red traffic light?,c,certain,b,no,"Explanation: treat a blinking red like a stop sign - full stop, then proceed when clear."
+97,"When approaching a flooded area and you have to go through it, what should you do?",c,certain,c,yes,Explanation: proceed at a very slow speed through floodwater.
+98,The headlights should be used often as needed to:,c,certain,b,no,Explanation explicitly rejects 'intentions' and 'right of way' and says headlights let others know you are approaching.
+99,How close should another car be before you dim your headlights?,a,certain,n/a (not flagged),n/a,Explanation explicitly states 150 meters.
+100,Road accidents can be avoided and minimized if the driver:,a,certain,b,no,Explanation: obeying installed traffic signs is the key accident-prevention measure.
+101,When driving downhill on a mountain road always:,c,certain,a,no,Explanation: shift to low gear and use engine braking; being ready to brake is secondary.
