@@ -1,5 +1,4 @@
-﻿import 'dart:async';
-import 'dart:ui';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +11,7 @@ import '../services/language_service.dart';
 import '../theme/app_theme.dart';
 import '../theme/widgets.dart';
 import 'auth_gate.dart';
+import 'info_screen.dart';
 
 const _kQuoteKeys = ['welcome_quote_1', 'welcome_quote_2', 'welcome_quote_3', 'welcome_quote_4'];
 
@@ -84,13 +84,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     child: Row(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: [
-                              BoxShadow(color: Colors.white.withValues(alpha: 0.55), blurRadius: 18, spreadRadius: 1),
-                              BoxShadow(color: Colors.black.withValues(alpha: 0.35), blurRadius: 10, offset: const Offset(0, 3)),
-                            ],
-                          ),
+                          padding: const EdgeInsets.all(3),
+                          decoration: Clay.white(radius: 17, depth: 0.55),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(14),
                             child: Image.asset(
@@ -107,7 +102,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                           style: GoogleFonts.playfairDisplay(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,
-                            fontSize: 19,
+                            fontSize: 21,
                             shadows: [
                               Shadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10, offset: const Offset(0, 2)),
                             ],
@@ -142,7 +137,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                               key: ValueKey(_quoteIndex),
                               style: GoogleFonts.playfairDisplay(
                                 color: Colors.white,
-                                fontSize: 30,
+                                fontSize: 32,
                                 height: 1.15,
                                 fontWeight: FontWeight.w800,
                                 shadows: [
@@ -179,11 +174,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                           const SizedBox(height: 20),
                           GradientButton(
                             label: tr(context, 'welcome_continue'),
-                            onPressed: () {
+                            onPressed: () async {
                               HapticFeedback.lightImpact();
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (_) => const AuthGate()),
+                              final agreed = await showDialog<bool>(
+                                context: context,
+                                builder: (_) => const _ConsentDialog(),
                               );
+                              if (agreed == true && context.mounted) {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (_) => const AuthGate()),
+                                );
+                              }
                             },
                           ),
                         ],
@@ -200,35 +201,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   }
 }
 
-/// Small translucent glass pill above the headline ("Official LTO Reviewer").
+/// Small white clay pill above the headline ("Official LTO Reviewer").
 class _GlassBadge extends StatelessWidget {
   const _GlassBadge();
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(999),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.14),
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+      decoration: Clay.white(radius: 999, depth: 0.45),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(SolarIconsBold.verifiedCheck, size: 15, color: AppPalette.light.primary),
+          const SizedBox(width: 6),
+          Text(
+            tr(context, 'welcome_badge'),
+            style: GoogleFonts.playfairDisplay(color: AppPalette.light.textPrimary, fontWeight: FontWeight.w700, fontSize: 13),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(SolarIconsBold.verifiedCheck, size: 14, color: Colors.white),
-              const SizedBox(width: 6),
-              Text(
-                tr(context, 'welcome_badge'),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -265,6 +256,137 @@ class _GlassPanel extends StatelessWidget {
             topContent,
             const SizedBox(height: 20),
             child,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The "Before you continue" consent step, shown after the language pick
+/// and before entering the login flow. A branded alternative to the plain
+/// [showAppConfirmDialog] used elsewhere: a gradient icon badge, a serif
+/// headline matching the rest of the brand, and two tappable chips that
+/// let the user open the full Terms & Conditions or Privacy Policy without
+/// losing their place, before deciding whether to agree.
+class _ConsentDialog extends StatelessWidget {
+  const _ConsentDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 28),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 380),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(26, 32, 26, 22),
+          decoration: Clay.box(p, color: p.surfaceElevated, radius: 32, depth: 1.3),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: Clay.accent(p.primary, shape: BoxShape.circle),
+                alignment: Alignment.center,
+                child: const Icon(SolarIconsBold.verifiedCheck, color: Colors.white, size: 30),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                tr(context, 'consent_dialog_title'),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 21, color: p.textPrimary),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                tr(context, 'consent_dialog_message'),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: p.textSecondary, fontSize: 14.5, height: 1.5),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: _ConsentLinkChip(
+                      icon: SolarIconsOutline.shieldCheck,
+                      label: tr(context, 'settings_privacy'),
+                      onTap: () => showInfoSheet(
+                        context,
+                        title: trRead(context, 'settings_privacy'),
+                        intro: trRead(context, 'privacy_intro'),
+                        sections: privacyPolicySections(context, listen: false),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _ConsentLinkChip(
+                      icon: SolarIconsOutline.documentText,
+                      label: tr(context, 'settings_terms'),
+                      onTap: () => showInfoSheet(
+                        context,
+                        title: trRead(context, 'settings_terms'),
+                        intro: trRead(context, 'terms_intro'),
+                        sections: termsSections(context, listen: false),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              GradientButton(
+                label: tr(context, 'consent_agree'),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+              const SizedBox(height: 4),
+              SizedBox(
+                width: double.infinity,
+                height: 46,
+                child: TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  style: TextButton.styleFrom(foregroundColor: p.textSecondary),
+                  child: Text(tr(context, 'consent_decline'), style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One tappable "Privacy Policy" / "Terms & Conditions" chip within
+/// [_ConsentDialog].
+class _ConsentLinkChip extends StatelessWidget {
+  const _ConsentLinkChip({required this.icon, required this.label, required this.onTap});
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: Clay.box(p, color: p.chipBg, radius: 18, depth: 0.5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18, color: p.primary),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: p.textPrimary, fontWeight: FontWeight.w700, fontSize: 12, height: 1.2),
+            ),
           ],
         ),
       ),

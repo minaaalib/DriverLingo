@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -20,13 +20,15 @@ class ProfileScreen extends StatelessWidget {
 
     return GlowBackground(
       child: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          padding: EdgeInsets.fromLTRB(20, 16, 20, 32 + MediaQuery.paddingOf(context).bottom),
           child: PageEntrance(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(tr(context, 'profile_title'), style: GoogleFonts.playfairDisplay(fontSize: 28, fontWeight: FontWeight.w800, color: p.textPrimary)),
+                Text(tr(context, 'profile_title'),
+                    style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.w700, color: p.textPrimary)),
                 const SizedBox(height: 20),
                 AppCard(
                   child: Column(
@@ -34,15 +36,7 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(color: p.primary.withValues(alpha: 0.35), blurRadius: 18, offset: const Offset(0, 8)),
-                              ],
-                            ),
-                            child: AvatarBadge(initials: initialsOf(user?.name ?? '?'), size: 72),
-                          ),
+                          const AvatarBadge(size: 72),
                           const SizedBox(width: 18),
                           Expanded(
                             child: Column(
@@ -50,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   user?.name ?? tr(context, 'home_default_name'),
-                                  style: GoogleFonts.playfairDisplay(fontWeight: FontWeight.w800, fontSize: 20, color: p.textPrimary),
+                                  style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 20, color: p.textPrimary),
                                 ),
                                 const SizedBox(height: 3),
                                 Text(user?.email ?? '', style: TextStyle(color: p.textSecondary, fontSize: 13)),
@@ -77,23 +71,24 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 SectionLabel(tr(context, 'profile_about')),
-                AppCard(
+                SizedBox(
+                  width: double.infinity,
                   child: Column(
                     children: [
                       _InfoRow(
                         icon: SolarIconsOutline.globus,
                         iconColor: p.primary,
                         label: tr(context, 'profile_languages'),
-                        value: 'English Â· Filipino Â· Hiligaynon',
+                        value: 'English · Filipino · Hiligaynon',
                       ),
-                      Divider(height: 28, color: p.border),
+                      const SizedBox(height: 10),
                       _InfoRow(
                         icon: SolarIconsOutline.folderCheck,
                         iconColor: p.success,
                         label: tr(context, 'profile_content'),
                         value: '101 ${tr(context, 'profile_content_value')}',
                       ),
-                      Divider(height: 28, color: p.border),
+                      const SizedBox(height: 10),
                       _InfoRow(
                         icon: SolarIconsOutline.infoCircle,
                         iconColor: p.textTertiary,
@@ -148,25 +143,21 @@ class _InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return Row(
-      children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-          alignment: Alignment.center,
-          child: Icon(icon, size: 18, color: iconColor),
-        ),
-        const SizedBox(width: 14),
-        Expanded(child: Text(label, style: TextStyle(color: p.textSecondary))),
-        Flexible(
-          child: Text(
-            value,
-            textAlign: TextAlign.right,
-            style: TextStyle(color: p.textPrimary, fontWeight: FontWeight.w600),
+    return ClayTile(
+      child: Row(
+        children: [
+          ClayIconBadge(icon: icon, color: iconColor),
+          const SizedBox(width: 14),
+          Expanded(child: Text(label, style: TextStyle(color: p.textSecondary))),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: TextStyle(color: p.textPrimary, fontWeight: FontWeight.w600),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

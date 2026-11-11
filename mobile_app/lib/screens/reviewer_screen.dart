@@ -52,7 +52,7 @@ class _ReviewerScreenState extends State<ReviewerScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: Text('Reviewer', style: GoogleFonts.playfairDisplay(fontSize: 22, fontWeight: FontWeight.w800, color: p.textPrimary)),
+                          child: Text('Reviewer', style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w700, color: p.textPrimary)),
                         ),
                       ],
                     ),
@@ -136,7 +136,7 @@ class _ReviewerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(26),
       onTap: onTap,
       child: AppCard(
         child: Column(
@@ -179,8 +179,13 @@ class _ReviewerCard extends StatelessWidget {
                             ),
                           ),
                         if (question.explanation.isNotEmpty) ...[
-                          Divider(height: 20, color: p.border),
-                          Text(question.explanation, style: TextStyle(color: p.textSecondary, fontSize: 13, height: 1.4)),
+                          const SizedBox(height: 8),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: Clay.inset(p, radius: 16),
+                            child: Text(question.explanation, style: TextStyle(color: p.textSecondary, fontSize: 13, height: 1.4)),
+                          ),
                         ],
                       ],
                     ),

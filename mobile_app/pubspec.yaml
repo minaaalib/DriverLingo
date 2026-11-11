@@ -14,18 +14,13 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
 
-  # Networking
-  dio: ^5.4.3+1
-
   # State management (lightweight, no code-gen required)
   provider: ^6.1.2
-
-  # Secure JWT storage
-  flutter_secure_storage: ^9.2.2
 
   # Google Sign-In, brokered through Supabase Auth
   google_sign_in: ^6.2.1
   supabase_flutter: ^2.6.0
+  flutter_svg: ^2.0.10+1
 
   # Offline question-bank cache + local exam progress
   sqflite: ^2.3.3+1

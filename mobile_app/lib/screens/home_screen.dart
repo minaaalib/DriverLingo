@@ -26,7 +26,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   String _category = ExamCategory.nonProfessional;
   late int _numQuestions;
   bool _useCustomCount = false;
@@ -34,6 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _examService = ExamService();
   late Future<ExamStats> _statsFuture;
+
+  /// Last loaded stats, shown while a refresh is in flight so the card
+  /// doesn't flash back to its empty state.
+  ExamStats? _lastStats;
 
   static const _categoryIcons = {
     ExamCategory.nonProfessional: SolarIconsOutline.wheel,
@@ -45,6 +49,28 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _numQuestions = ExamCategory.standardCounts[_category]!;
     _statsFuture = _loadStats();
+    ExamService.historyChanged.addListener(_refreshStats);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    ExamService.historyChanged.removeListener(_refreshStats);
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// Reopening the app (possibly on a new day) recomputes the streak so it
+  /// doesn't show yesterday's value, or a streak that has since lapsed.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshStats();
+  }
+
+  /// Reloads stats after any exam is submitted (from here, onboarding, or a
+  /// resumed exam in History) so the streak and best score stay current.
+  void _refreshStats() {
+    if (mounted) setState(() => _statsFuture = _loadStats());
   }
 
   Future<ExamStats> _loadStats() async {
@@ -79,7 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
       await Navigator.of(context).push(
         MaterialPageRoute(builder: (_) => ExamScreen(session: session)),
       );
-      if (mounted) setState(() => _statsFuture = _loadStats());
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
@@ -92,29 +117,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthService>();
     final p = AppPalette.of(context);
-    final firstName = (auth.currentUser?.name ?? '').split(' ').first;
+    final firstName = auth.currentUser?.firstName ?? '';
 
     final languagePref = context.watch<LanguagePreference>();
 
     return GlowBackground(
       child: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          padding: EdgeInsets.fromLTRB(20, 16, 20, 32 + MediaQuery.paddingOf(context).bottom),
           child: PageEntrance(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   children: [
-                    AvatarBadge(initials: initialsOf(auth.currentUser?.name ?? '?')),
+                    const AvatarBadge(),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Kumusta, ${firstName.isEmpty ? tr(context, 'home_default_name') : firstName}!',
-                            style: GoogleFonts.playfairDisplay(fontSize: 20, fontWeight: FontWeight.w800, color: p.textPrimary),
+                            trf(context, 'home_greeting', {'name': firstName.isEmpty ? tr(context, 'home_default_name') : firstName}),
+                            style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700, color: p.textPrimary),
                           ),
                           Text(tr(context, 'home_ready_to_practice'), style: TextStyle(color: p.textSecondary)),
                         ],
@@ -134,8 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                 FutureBuilder<ExamStats>(
                   future: _statsFuture,
+                  initialData: _lastStats,
                   builder: (context, snapshot) {
                     final stats = snapshot.data;
+                    if (snapshot.hasData) _lastStats = stats;
                     return _ReadinessCard(stats: stats);
                   },
                 ),
@@ -206,15 +234,25 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (sheetContext, setSheetState) {
             final p = AppPalette.of(sheetContext);
             return Container(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               decoration: BoxDecoration(
-                color: p.surfaceElevated,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                color: p.bg,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                border: Border.all(color: p.clayRim),
+                boxShadow: Clay.shadows(p, depth: 1.2),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 14),
+                      decoration: BoxDecoration(color: p.borderStrong, borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
                   Text(tr(sheetContext, 'home_sheet_title'), style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: p.textPrimary)),
                   const SizedBox(height: 8),
                   SwitchListTile(
@@ -271,11 +309,7 @@ class _ThemeToggleButton extends StatelessWidget {
       child: Container(
         width: 44,
         height: 44,
-        decoration: BoxDecoration(
-          color: p.surfaceElevated,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: p.border),
-        ),
+        decoration: Clay.box(p, color: p.surfaceElevated, radius: 16, depth: 0.55),
         child: Icon(
           isDark ? SolarIconsOutline.sun : SolarIconsOutline.moon,
           color: p.textSecondary,
@@ -323,11 +357,7 @@ class _LanguageIconButton extends StatelessWidget {
       child: Container(
         width: 44,
         height: 44,
-        decoration: BoxDecoration(
-          color: p.surfaceElevated,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: p.border),
-        ),
+        decoration: Clay.box(p, color: p.surfaceElevated, radius: 16, depth: 0.55),
         alignment: Alignment.center,
         child: Icon(SolarIconsOutline.globus, color: p.textSecondary, size: 20),
       ),
@@ -357,7 +387,7 @@ class _ReadinessCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   tr(context, hasHistory ? 'home_momentum_title' : 'home_first_exam_title'),
-                  style: GoogleFonts.playfairDisplay(fontSize: 22, fontWeight: FontWeight.w800, height: 1.15, color: p.textPrimary),
+                  style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w700, height: 1.15, color: p.textPrimary),
                 ),
               ),
               const ReadinessBadge(),
@@ -373,25 +403,21 @@ class _ReadinessCard extends StatelessWidget {
                 label: best != null ? '${tr(context, 'home_best')} ${best.round()}%' : tr(context, 'home_no_attempts'),
                 color: p.success,
               ),
-              if (streak > 0) StatPill(icon: SolarIconsBold.fire, label: trf(context, 'home_day_streak', {'n': '$streak'}), color: p.textPrimary),
+              StatPill(
+                icon: streak > 0 ? SolarIconsBold.fire : SolarIconsOutline.fire,
+                label: trf(context, 'home_day_streak', {'n': '$streak'}),
+                color: streak > 0 ? p.textPrimary : p.textTertiary,
+              ),
             ],
           ),
           const SizedBox(height: 16),
           Text(tr(context, 'home_overall_readiness'), style: TextStyle(color: p.textTertiary, fontWeight: FontWeight.w800, fontSize: 11, letterSpacing: 0.6)),
           const SizedBox(height: 8),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: hasHistory ? readiness / 100 : 0),
-              duration: const Duration(milliseconds: 900),
-              curve: Curves.easeOutCubic,
-              builder: (context, value, _) => LinearProgressIndicator(
-                value: value,
-                minHeight: 8,
-                backgroundColor: p.chipBg,
-                valueColor: AlwaysStoppedAnimation(p.success),
-              ),
-            ),
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0, end: hasHistory ? readiness / 100 : 0),
+            duration: const Duration(milliseconds: 900),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) => ClayProgressBar(value: value, color: p.success),
           ),
         ],
       ),
@@ -412,13 +438,15 @@ class _StatBox extends StatelessWidget {
     final p = AppPalette.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(24),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: accent ? p.success.withValues(alpha: 0.12) : p.surface,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: accent ? p.success.withValues(alpha: 0.4) : p.border),
+        decoration: Clay.box(
+          p,
+          color: accent ? p.success.withValues(alpha: 0.12) : null,
+          radius: 24,
+          depth: 0.8,
+          borderColor: accent ? p.success.withValues(alpha: 0.4) : null,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

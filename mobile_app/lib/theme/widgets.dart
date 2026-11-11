@@ -118,11 +118,11 @@ class GlowBackground extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.alphaBlend(p.primary.withValues(alpha: 0.28), p.bg),
-                Color.alphaBlend(p.primary.withValues(alpha: 0.08), p.bg),
+                Color.alphaBlend(p.primary.withValues(alpha: 0.16), p.bg),
+                Color.alphaBlend(p.primary.withValues(alpha: 0.05), p.bg),
                 p.bg,
-                Color.alphaBlend(p.success.withValues(alpha: 0.10), p.bg),
-                Color.alphaBlend(p.success.withValues(alpha: 0.26), p.bg),
+                Color.alphaBlend(p.success.withValues(alpha: 0.06), p.bg),
+                Color.alphaBlend(p.success.withValues(alpha: 0.14), p.bg),
               ],
               stops: const [0, 0.3, 0.5, 0.7, 1],
             ),
@@ -182,7 +182,7 @@ class HeroPhotoBackground extends StatelessWidget {
   }
 }
 
-/// Small glass pill for picking the reviewer language from anywhere that
+/// Small white clay pill for picking the reviewer language from anywhere that
 /// isn't the welcome screen's full-width dropdown — e.g. pinned to a
 /// corner of the auth screens over the hero photo.
 class CompactLanguagePicker extends StatelessWidget {
@@ -206,26 +206,19 @@ class CompactLanguagePicker extends StatelessWidget {
           )
           .toList(),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 10, offset: const Offset(0, 3)),
-          ],
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        decoration: Clay.white(radius: 18, depth: 0.55),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(SolarIconsOutline.globus, size: 16, color: Colors.white),
+            Icon(SolarIconsOutline.globus, size: 16, color: AppPalette.light.primary),
             const SizedBox(width: 6),
             Text(
               AppLanguage.labels[value] ?? value,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13),
+              style: TextStyle(color: AppPalette.light.textPrimary, fontWeight: FontWeight.w600, fontSize: 13),
             ),
             const SizedBox(width: 2),
-            const Icon(SolarIconsOutline.altArrowDown, size: 18, color: Colors.white),
+            Icon(SolarIconsOutline.altArrowDown, size: 18, color: AppPalette.light.textPrimary),
           ],
         ),
       ),
@@ -284,21 +277,11 @@ class GradientButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(22),
           onTap: enabled ? onPressed : null,
           child: Container(
             height: 56,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              gradient: LinearGradient(
-                colors: [p.primary, p.primaryDeep],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: [
-                BoxShadow(color: p.primary.withValues(alpha: 0.35), blurRadius: 20, offset: const Offset(0, 8)),
-              ],
-            ),
+            decoration: Clay.accent(p.primary, radius: 22),
             alignment: Alignment.center,
             child: isLoading
                 ? const SizedBox(
@@ -306,12 +289,18 @@ class GradientButton extends StatelessWidget {
                     width: 22,
                     child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
                   )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16)),
-                      if (icon != null) ...[const SizedBox(width: 8), Icon(icon, color: Colors.white, size: 20)],
-                    ],
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(label, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16)),
+                          if (icon != null) ...[const SizedBox(width: 8), Icon(icon, color: Colors.white, size: 20)],
+                        ],
+                      ),
+                    ),
                   ),
           ),
         ),
@@ -323,30 +312,50 @@ class GradientButton extends StatelessWidget {
 /// Secondary outline button (used for "Previous", "Keep answering", etc).
 /// Pass [color] to recolor it for a destructive action (e.g. log out).
 class OutlinePillButton extends StatelessWidget {
-  const OutlinePillButton({super.key, required this.label, required this.onPressed, this.color, this.icon});
+  const OutlinePillButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.color,
+    this.icon,
+    this.leading,
+  });
   final String label;
   final VoidCallback? onPressed;
   final Color? color;
   final IconData? icon;
 
+  /// A custom leading widget (e.g. a full-color brand logo) shown instead of
+  /// [icon] when a single-color [Icon] glyph isn't appropriate.
+  final Widget? leading;
+
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return SizedBox(
+    return Container(
       height: 56,
+      decoration: Clay.box(p, color: color?.withValues(alpha: 0.08), radius: 22, depth: 0.7),
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          backgroundColor: color?.withValues(alpha: 0.08) ?? p.surface,
-          side: BorderSide(color: color ?? p.borderStrong, width: 1.4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          backgroundColor: Colors.transparent,
+          side: BorderSide(color: color?.withValues(alpha: 0.45) ?? Colors.transparent, width: 1.2),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
           foregroundColor: color ?? p.textPrimary,
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon != null) ...[Icon(icon, size: 18), const SizedBox(width: 8)],
-            Text(label, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+            if (leading != null) ...[leading!, const SizedBox(width: 10)]
+            else if (icon != null) ...[Icon(icon, size: 18), const SizedBox(width: 8)],
+            Flexible(
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),
@@ -370,11 +379,9 @@ class PillChip extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(999),
-          color: selected ? p.primary : p.chipBg,
-          border: Border.all(color: selected ? p.primary : p.chipBorder),
-        ),
+        decoration: selected
+            ? Clay.accent(p.primary, radius: 999, depth: 0.6)
+            : Clay.box(p, radius: 999, depth: 0.5),
         child: Text(
           label,
           style: TextStyle(color: selected ? Colors.white : p.textSecondary, fontWeight: FontWeight.w700),
@@ -406,23 +413,27 @@ class SelectableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(24),
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          color: selected ? p.primary.withValues(alpha: 0.12) : p.surface,
-          border: Border.all(color: selected ? p.primary : p.border, width: selected ? 1.6 : 1),
+        decoration: Clay.box(
+          p,
+          color: selected ? p.primary.withValues(alpha: 0.10) : null,
+          radius: 24,
+          depth: selected ? 0.6 : 0.9,
+          borderColor: selected ? p.primary : null,
         ),
         child: Row(
           children: [
             Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(color: p.chipBg, borderRadius: BorderRadius.circular(12)),
-              child: Icon(icon, color: selected ? p.primary : p.textSecondary, size: 22),
+              decoration: selected
+                  ? Clay.accent(p.primary, radius: 14, depth: 0.5)
+                  : Clay.box(p, color: p.chipBg, radius: 14, depth: 0.4),
+              child: Icon(icon, color: selected ? Colors.white : p.textSecondary, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -438,11 +449,9 @@ class SelectableCard extends StatelessWidget {
             Container(
               width: 24,
               height: 24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: selected ? p.primary : Colors.transparent,
-                border: Border.all(color: selected ? p.primary : p.borderStrong, width: 1.6),
-              ),
+              decoration: selected
+                  ? Clay.accent(p.primary, shape: BoxShape.circle, depth: 0.35)
+                  : Clay.inset(p, radius: 12),
               // Solar has no bare checkmark glyph; checkCircle would double up on this circle.
               child: selected ? const Icon(Icons.check, size: 15, color: Colors.white) : null,
             ),
@@ -466,11 +475,7 @@ class StatPill extends StatelessWidget {
     final c = color ?? p.textPrimary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: p.surfaceElevated,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: p.border),
-      ),
+      decoration: Clay.box(p, color: p.surfaceElevated, radius: 999, depth: 0.45),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -483,10 +488,9 @@ class StatPill extends StatelessWidget {
   }
 }
 
-/// Gradient-filled initials avatar.
+/// Gradient-filled avatar showing a generic profile icon.
 class AvatarBadge extends StatelessWidget {
-  const AvatarBadge({super.key, required this.initials, this.size = 48});
-  final String initials;
+  const AvatarBadge({super.key, this.size = 48});
   final double size;
 
   @override
@@ -494,33 +498,15 @@ class AvatarBadge extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(size * 0.32),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF4F7FFF), Color(0xFF2F5FE0)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
+      decoration: Clay.accent(AppPalette.of(context).primary, radius: size * 0.34, depth: size / 90),
       alignment: Alignment.center,
-      child: Text(
-        initials,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: size * 0.36),
-      ),
+      child: Icon(SolarIconsBold.user, color: Colors.white, size: size * 0.52),
     );
   }
 }
 
-String initialsOf(String name) {
-  final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
-  if (parts.isEmpty) return '?';
-  if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
-  return (parts.first.substring(0, 1) + parts.last.substring(0, 1)).toUpperCase();
-}
-
-/// Full-width language picker for the welcome screen, styled as frosted
-/// glass over the hero photo: blurred backdrop, translucent white fill,
-/// white text/icons so it reads clearly against the busy photo behind it.
+/// Full-width language picker for the welcome screen: a white clay
+/// panel with dark text, so it stands out clearly on the hero photo.
 class LanguageDropdown extends StatelessWidget {
   const LanguageDropdown({super.key, required this.value, required this.onChanged});
 
@@ -530,32 +516,21 @@ class LanguageDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(22),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-        child: Container(
+    return Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.16),
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.4)),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 20, offset: const Offset(0, 8)),
-            ],
-          ),
+          decoration: Clay.white(radius: 24),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               isExpanded: true,
-              icon: const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Icon(SolarIconsOutline.altArrowDown, color: Colors.white, size: 26),
+              icon: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Icon(SolarIconsOutline.altArrowDown, color: AppPalette.light.textPrimary, size: 26),
               ),
               dropdownColor: p.surfaceElevated,
               borderRadius: BorderRadius.circular(18),
               elevation: 6,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17),
+              style: TextStyle(color: AppPalette.light.textPrimary, fontWeight: FontWeight.w600, fontSize: 17),
               selectedItemBuilder: (context) => AppLanguage.labels.entries
                   .map(
                     (entry) => Row(
@@ -563,15 +538,12 @@ class LanguageDropdown extends StatelessWidget {
                         Container(
                           width: 38,
                           height: 38,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.18),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          decoration: Clay.accent(AppPalette.light.primary, radius: 14, depth: 0.45),
                           alignment: Alignment.center,
                           child: const Icon(SolarIconsOutline.globus, size: 19, color: Colors.white),
                         ),
                         const SizedBox(width: 12),
-                        Text(entry.value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17)),
+                        Text(entry.value, style: TextStyle(color: AppPalette.light.textPrimary, fontWeight: FontWeight.w600, fontSize: 17)),
                       ],
                     ),
                   )
@@ -595,8 +567,6 @@ class LanguageDropdown extends StatelessWidget {
               },
             ),
           ),
-        ),
-      ),
     );
   }
 }
@@ -755,14 +725,7 @@ class AppCard extends StatelessWidget {
     final p = AppPalette.of(context);
     return Container(
       padding: padding ?? const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: color ?? p.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: borderColor ?? p.border),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 18, offset: const Offset(0, 8)),
-        ],
-      ),
+      decoration: Clay.box(p, color: color, radius: 26, borderColor: borderColor),
       child: child,
     );
   }
@@ -794,13 +757,7 @@ Future<bool?> showAppConfirmDialog(
         constraints: const BoxConstraints(maxWidth: 360),
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
-          decoration: BoxDecoration(
-            color: p.surfaceElevated,
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.25), blurRadius: 30, offset: const Offset(0, 14)),
-            ],
-          ),
+          decoration: Clay.box(p, color: p.surfaceElevated, radius: 32, depth: 1.3),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -808,16 +765,16 @@ Future<bool?> showAppConfirmDialog(
                 Container(
                   width: 56,
                   height: 56,
-                  decoration: BoxDecoration(color: accent.withValues(alpha: 0.12), shape: BoxShape.circle),
+                  decoration: Clay.accent(accent, shape: BoxShape.circle, depth: 0.7),
                   alignment: Alignment.center,
-                  child: Icon(icon, color: accent, size: 26),
+                  child: Icon(icon, color: Colors.white, size: 26),
                 ),
                 const SizedBox(height: 16),
               ],
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18, color: p.textPrimary),
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18, color: p.textPrimary),
               ),
               const SizedBox(height: 8),
               Text(
@@ -830,13 +787,15 @@ Future<bool?> showAppConfirmDialog(
                 width: double.infinity,
                 height: 50,
                 child: Material(
-                  color: accent,
-                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.transparent,
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(20),
                     onTap: () => Navigator.pop(context, true),
-                    child: Center(
-                      child: Text(confirmLabel, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 15)),
+                    child: Ink(
+                      decoration: Clay.accent(accent, radius: 20, depth: 0.7),
+                      child: Center(
+                      child: Text(confirmLabel, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 15)),
+                      ),
                     ),
                   ),
                 ),
@@ -857,4 +816,96 @@ Future<bool?> showAppConfirmDialog(
       ),
     ),
   );
+}
+
+/// One raised clay row (settings options, profile info, link rows).
+/// Lists are built from separate tiles with a gap between them instead
+/// of one card split by divider lines.
+class ClayTile extends StatelessWidget {
+  const ClayTile({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.selected = false,
+    this.padding = const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+  });
+
+  final Widget child;
+  final VoidCallback? onTap;
+  final bool selected;
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      decoration: Clay.box(
+        p,
+        color: selected ? p.primary.withValues(alpha: 0.08) : null,
+        radius: 20,
+        depth: selected ? 0.5 : 0.7,
+        borderColor: selected ? p.primary.withValues(alpha: 0.55) : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: onTap,
+          child: Padding(padding: padding, child: child),
+        ),
+      ),
+    );
+  }
+}
+
+/// Small clay icon square for list rows. Colored clay with a white icon
+/// when [color] is given, otherwise a neutral clay square.
+class ClayIconBadge extends StatelessWidget {
+  const ClayIconBadge({super.key, required this.icon, this.color, this.size = 36});
+  final IconData icon;
+  final Color? color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    return Container(
+      width: size,
+      height: size,
+      decoration: color != null
+          ? Clay.accent(color!, radius: size * 0.34, depth: 0.4)
+          : Clay.box(p, color: p.chipBg, radius: size * 0.34, depth: 0.35),
+      alignment: Alignment.center,
+      child: Icon(icon, size: size * 0.5, color: color != null ? Colors.white : p.textTertiary),
+    );
+  }
+}
+
+/// Clay progress bar: a pressed-in track with a raised colored fill.
+class ClayProgressBar extends StatelessWidget {
+  const ClayProgressBar({super.key, required this.value, this.color, this.height = 12});
+  final double value;
+  final Color? color;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = AppPalette.of(context);
+    final v = value.clamp(0.0, 1.0);
+    return LayoutBuilder(
+      builder: (context, constraints) => Container(
+        height: height,
+        decoration: Clay.inset(p, radius: 999),
+        alignment: Alignment.centerLeft,
+        child: v <= 0
+            ? null
+            : Container(
+                width: (constraints.maxWidth * v).clamp(height, constraints.maxWidth),
+                height: height,
+                decoration: Clay.accent(color ?? p.primary, radius: 999, depth: 0.3),
+              ),
+      ),
+    );
+  }
 }

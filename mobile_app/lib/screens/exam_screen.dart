@@ -14,9 +14,13 @@ import '../theme/widgets.dart';
 import 'results_screen.dart';
 
 class ExamScreen extends StatefulWidget {
-  const ExamScreen({super.key, required this.session});
+  const ExamScreen({super.key, required this.session, this.isPractice = false});
 
   final ExamSession session;
+
+  /// True for the first-login onboarding practice exam. Its results page
+  /// sends the user to Home to practice more instead of offering a retake.
+  final bool isPractice;
 
   @override
   State<ExamScreen> createState() => _ExamScreenState();
@@ -39,9 +43,15 @@ class _ExamScreenState extends State<ExamScreen> {
     super.initState();
     _pageController = PageController();
     _currentIndex = 0;
-    _startedAt = DateTime.now();
+    // The exam's actual start time, not DateTime.now(): for a freshly
+    // started exam these are effectively the same instant, but a resumed
+    // exam (see HistoryScreen) needs the countdown to continue from when
+    // it originally began, not reset to the full duration.
+    _startedAt = widget.session.summary.startedAt;
     _displayLanguage = widget.session.summary.languageUsed;
-    _answers = {for (final q in widget.session.questions) q.questionId: null};
+    _answers = {
+      for (final q in widget.session.questions) q.questionId: q.selectedAnswer
+    };
 
     final limit = widget.session.summary.timeLimitMinutes;
     if (limit != null) {
@@ -72,6 +82,20 @@ class _ExamScreenState extends State<ExamScreen> {
 
   int get _answeredCount => _answers.values.where((v) => v != null).length;
 
+  /// Looks up UI text in [_displayLanguage] - the exam's own translate
+  /// toggle - rather than the app-wide [LanguagePreference] that [tr]
+  /// reads, so every bit of text on this screen (buttons, dialogs, title)
+  /// stays in sync with the language picked via the globe icon.
+  String _t(String key) => AppStrings.of(key, _displayLanguage);
+
+  String _tf(String key, Map<String, String> params) {
+    var result = _t(key);
+    for (final entry in params.entries) {
+      result = result.replaceAll('{${entry.key}}', entry.value);
+    }
+    return result;
+  }
+
   Future<void> _submit({bool autoSubmitted = false}) async {
     if (_isSubmitting) return;
 
@@ -79,11 +103,14 @@ class _ExamScreenState extends State<ExamScreen> {
       final proceed = await showAppConfirmDialog(
         context,
         icon: SolarIconsBold.checkCircle,
-        title: trRead(context, 'exam_submit_dialog_title'),
-        message: '${trfRead(context, 'exam_answered_count', {'a': '$_answeredCount', 'b': '${widget.session.questions.length}'})} '
-            '${trRead(context, 'exam_unanswered_note')}',
-        confirmLabel: trRead(context, 'exam_submit_button'),
-        cancelLabel: trRead(context, 'exam_keep_answering'),
+        title: _t('exam_submit_dialog_title'),
+        message: '${_tf('exam_answered_count', {
+              'a': '$_answeredCount',
+              'b': '${widget.session.questions.length}'
+            })} '
+            '${_t('exam_unanswered_note')}',
+        confirmLabel: _t('exam_submit_button'),
+        cancelLabel: _t('exam_keep_answering'),
       );
       if (proceed != true) return;
     }
@@ -98,12 +125,13 @@ class _ExamScreenState extends State<ExamScreen> {
       );
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => ResultsScreen(result: result)),
+        MaterialPageRoute(builder: (_) => ResultsScreen(result: result, isPractice: widget.isPractice)),
       );
     } on ApiException catch (e) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
@@ -112,10 +140,10 @@ class _ExamScreenState extends State<ExamScreen> {
       context,
       icon: SolarIconsOutline.dangerCircle,
       destructive: true,
-      title: trRead(context, 'exam_leave_dialog_title'),
-      message: trRead(context, 'exam_leave_dialog_body'),
-      confirmLabel: trRead(context, 'exam_leave'),
-      cancelLabel: trRead(context, 'exam_stay'),
+      title: _t('exam_leave_dialog_title'),
+      message: _t('exam_leave_dialog_body'),
+      confirmLabel: _t('exam_leave'),
+      cancelLabel: _t('exam_stay'),
     );
     return leave ?? false;
   }
@@ -135,15 +163,17 @@ class _ExamScreenState extends State<ExamScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text(trf(context, 'exam_question_of', {'a': '${_currentIndex + 1}', 'b': '${questions.length}'})),
+            title: Text(_tf('exam_question_of',
+                {'a': '${_currentIndex + 1}', 'b': '${questions.length}'})),
             actions: [
               PopupMenuButton<String>(
                 icon: Icon(SolarIconsOutline.globus, color: p.textSecondary),
-                tooltip: tr(context, 'action_translate'),
+                tooltip: _t('action_translate'),
                 initialValue: _displayLanguage,
                 onSelected: (value) => setState(() => _displayLanguage = value),
                 itemBuilder: (context) => AppLanguage.labels.entries
-                    .map((entry) => PopupMenuItem(value: entry.key, child: Text(entry.value)))
+                    .map((entry) => PopupMenuItem(
+                        value: entry.key, child: Text(entry.value)))
                     .toList(),
               ),
               if (_remaining != null)
@@ -153,18 +183,21 @@ class _ExamScreenState extends State<ExamScreen> {
                     child: StatPill(
                       icon: SolarIconsOutline.stopwatch,
                       label: _formatDuration(_remaining!),
-                      color: _remaining!.inMinutes < 5 ? p.danger : p.textPrimary,
+                      color:
+                          _remaining!.inMinutes < 5 ? p.danger : p.textPrimary,
                     ),
                   ),
                 ),
             ],
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(4),
-              child: ClipRRect(
-                child: LinearProgressIndicator(
-                  value: (_currentIndex + 1) / questions.length,
-                  backgroundColor: p.chipBg,
-                  valueColor: AlwaysStoppedAnimation(p.primary),
+              preferredSize: const Size.fromHeight(22),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 2, 20, 10),
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween(end: (_currentIndex + 1) / questions.length),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, _) => ClayProgressBar(value: value, height: 10),
                 ),
               ),
             ),
@@ -179,7 +212,8 @@ class _ExamScreenState extends State<ExamScreen> {
                 question: questions[index],
                 language: _displayLanguage,
                 selected: _answers[questions[index].questionId],
-                onSelect: (letter) => setState(() => _answers[questions[index].questionId] = letter),
+                onSelect: (letter) => setState(
+                    () => _answers[questions[index].questionId] = letter),
               ),
             ),
           ),
@@ -191,7 +225,7 @@ class _ExamScreenState extends State<ExamScreen> {
                   if (_currentIndex > 0)
                     Expanded(
                       child: OutlinePillButton(
-                        label: tr(context, 'exam_previous'),
+                        label: _t('exam_previous'),
                         onPressed: () => _pageController.previousPage(
                           duration: const Duration(milliseconds: 200),
                           curve: Curves.easeInOut,
@@ -203,13 +237,13 @@ class _ExamScreenState extends State<ExamScreen> {
                     child: _currentIndex == questions.length - 1
                         ? GradientButton(
                             label: _isSubmitting
-                                ? tr(context, 'exam_submitting')
-                                : '${tr(context, 'exam_submit_progress')} ($_answeredCount/${questions.length})',
+                                ? _t('exam_submitting')
+                                : '${_t('exam_submit_progress')} ($_answeredCount/${questions.length})',
                             isLoading: _isSubmitting,
                             onPressed: _isSubmitting ? null : () => _submit(),
                           )
                         : GradientButton(
-                            label: tr(context, 'exam_next'),
+                            label: _t('exam_next'),
                             icon: SolarIconsBold.arrowRight,
                             onPressed: () => _pageController.nextPage(
                               duration: const Duration(milliseconds: 200),
@@ -234,7 +268,11 @@ class _ExamScreenState extends State<ExamScreen> {
 }
 
 class _QuestionPage extends StatelessWidget {
-  const _QuestionPage({required this.question, required this.language, required this.selected, required this.onSelect});
+  const _QuestionPage(
+      {required this.question,
+      required this.language,
+      required this.selected,
+      required this.onSelect});
 
   final ExamQuestion question;
   final String language;
@@ -251,13 +289,21 @@ class _QuestionPage extends StatelessWidget {
         children: [
           Text(
             question.questionTextFor(language),
-            style: TextStyle(fontSize: 23, height: 1.3, fontWeight: FontWeight.w800, color: p.textPrimary),
+            style: TextStyle(
+                fontSize: 23,
+                height: 1.3,
+                fontWeight: FontWeight.w800,
+                color: p.textPrimary),
           ),
           if (question.questionPhoto != null) ...[
             const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(question.questionPhoto!, fit: BoxFit.cover),
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: Clay.box(p, radius: 24, depth: 0.7),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Image.network(question.questionPhoto!, fit: BoxFit.cover),
+              ),
             ),
           ],
           const SizedBox(height: 20),
@@ -277,7 +323,11 @@ class _QuestionPage extends StatelessWidget {
 }
 
 class _OptionCard extends StatelessWidget {
-  const _OptionCard({required this.letter, required this.text, required this.isSelected, required this.onTap});
+  const _OptionCard(
+      {required this.letter,
+      required this.text,
+      required this.isSelected,
+      required this.onTap});
 
   final String letter;
   final String text;
@@ -289,35 +339,43 @@ class _OptionCard extends StatelessWidget {
     final p = AppPalette.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(22),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? p.primary : p.border, width: isSelected ? 1.6 : 1),
-          borderRadius: BorderRadius.circular(16),
-          color: isSelected ? p.primary.withValues(alpha: 0.12) : p.surface,
+        decoration: Clay.box(
+          p,
+          color: isSelected ? p.primary.withValues(alpha: 0.10) : null,
+          radius: 22,
+          depth: isSelected ? 0.55 : 0.85,
+          borderColor: isSelected ? p.primary : null,
         ),
         child: Row(
           children: [
             Container(
               width: 34,
               height: 34,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isSelected ? p.primary : p.chipBg,
-              ),
+              decoration: isSelected
+                  ? Clay.accent(p.primary, shape: BoxShape.circle, depth: 0.45)
+                  : Clay.box(p, color: p.chipBg, shape: BoxShape.circle, depth: 0.35),
               alignment: Alignment.center,
               child: Text(
                 letter.toUpperCase(),
-                style: TextStyle(color: isSelected ? Colors.white : p.textSecondary, fontWeight: FontWeight.w800, fontSize: 16),
+                style: TextStyle(
+                    color: isSelected ? Colors.white : p.textSecondary,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16),
               ),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Text(
                 text,
-                style: TextStyle(color: p.textPrimary, fontSize: 17, fontWeight: FontWeight.w600, height: 1.25),
+                style: TextStyle(
+                    color: p.textPrimary,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    height: 1.25),
               ),
             ),
           ],

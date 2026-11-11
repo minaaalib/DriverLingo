@@ -1,20 +1,37 @@
 """Transactional email helpers: registration verification, password reset,
 and exam completion notices."""
 
+import logging
+import threading
+
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
+logger = logging.getLogger(__name__)
+
 
 def _send(subject, template_name, context, to_email):
+    # Template rendering is local and fast, so do it inline - a bad template
+    # should still raise immediately. The actual SMTP delivery is a network
+    # call that can take seconds, so it runs on a background thread instead
+    # of blocking the request/response cycle (e.g. login, registration,
+    # exam submission).
     message = render_to_string(template_name, context)
-    send_mail(
-        subject=subject,
-        message=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[to_email],
-        fail_silently=False,
-    )
+
+    def _deliver():
+        try:
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[to_email],
+                fail_silently=False,
+            )
+        except Exception:
+            logger.exception("Failed to send email %r to %s", subject, to_email)
+
+    threading.Thread(target=_deliver, daemon=True).start()
 
 
 def send_verification_email(user, token):

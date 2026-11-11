@@ -12,9 +12,12 @@ import '../theme/app_theme.dart';
 import '../theme/widgets.dart';
 
 class ResultsScreen extends StatefulWidget {
-  const ResultsScreen({super.key, required this.result});
+  const ResultsScreen({super.key, required this.result, this.isPractice = false});
 
   final ExamResult result;
+
+  /// See [ExamScreen.isPractice].
+  final bool isPractice;
 
   @override
   State<ResultsScreen> createState() => _ResultsScreenState();
@@ -81,11 +84,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     .toList(),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: p.surfaceElevated,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: p.border),
-                  ),
+                  decoration: Clay.box(p, color: p.surfaceElevated, radius: 16, depth: 0.5),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -110,7 +109,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
             children: [
               Text(
                 tr(context, 'results_title'),
-                style: GoogleFonts.playfairDisplay(fontSize: 30, fontWeight: FontWeight.w800, color: p.textPrimary),
+                style: GoogleFonts.poppins(fontSize: 30, fontWeight: FontWeight.w700, color: p.textPrimary),
               ),
               const SizedBox(height: 16),
               AppCard(
@@ -119,7 +118,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                     ExamResultBadge(passed: summary.passed),
                     Text(
                       '${summary.score} / ${summary.totalQuestions}',
-                      style: GoogleFonts.playfairDisplay(fontSize: 40, fontWeight: FontWeight.w800, color: p.textPrimary),
+                      style: GoogleFonts.poppins(fontSize: 40, fontWeight: FontWeight.w700, color: p.textPrimary),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -157,8 +156,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   )),
               const SizedBox(height: 8),
               GradientButton(
-                label: tr(context, 'results_retake'),
-                icon: SolarIconsBold.restart,
+                label: tr(context, widget.isPractice ? 'results_practice_more' : 'results_retake'),
+                icon: widget.isPractice ? SolarIconsBold.home2 : SolarIconsBold.restart,
                 onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
               ),
             ],
@@ -177,13 +176,17 @@ class _MetaChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 17, color: p.textTertiary),
-        const SizedBox(width: 4),
-        Text(label, style: TextStyle(color: p.textTertiary, fontSize: 14)),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: Clay.box(p, color: p.surfaceElevated, radius: 999, depth: 0.4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: p.textSecondary),
+          const SizedBox(width: 5),
+          Text(label, style: TextStyle(color: p.textSecondary, fontSize: 13, fontWeight: FontWeight.w500)),
+        ],
+      ),
     );
   }
 }
@@ -227,10 +230,15 @@ class _ReviewCard extends StatelessWidget {
               isCorrectAnswer: response.correctAnswer == letter,
             ),
           if (explanation.isNotEmpty) ...[
-            Divider(height: 20, color: p.border),
-            Text(
-              explanation,
-              style: TextStyle(color: p.textSecondary, fontStyle: FontStyle.italic, fontSize: 14),
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: Clay.inset(p, radius: 16),
+              child: Text(
+                explanation,
+                style: TextStyle(color: p.textSecondary, fontStyle: FontStyle.italic, fontSize: 14),
+              ),
             ),
           ],
         ],

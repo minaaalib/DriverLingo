@@ -1,7 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:solar_icons/solar_icons.dart';
 
+import '../core/app_strings.dart';
 import '../theme/app_theme.dart';
 import '../theme/widgets.dart';
 
@@ -12,10 +13,7 @@ class _Developer {
 }
 
 const _developers = [
-  _Developer('Trixie Paches', 'trixie.paches@wvsu.edu.ph'),
-  _Developer('Jorlen Diaz', 'jorlen.diaz@wvsu.edu.ph'),
-  _Developer('Danilyn PeÃ±aranda', 'danilyn.peÃ±aranda@wvsu.edu.ph'),
-  _Developer('Dennis Palermo', 'dennis.palermo@wvsu.edu.ph'),
+  _Developer('Dr. Rosie Jane P. Siosan', 'rosiejane.siosan@wvsu.edu.ph'),
 ];
 
 class ContactScreen extends StatelessWidget {
@@ -27,21 +25,18 @@ class ContactScreen extends StatelessWidget {
     return GlowBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(title: const Text('Contact Us')),
+        appBar: AppBar(title: Text(tr(context, 'settings_contact'))),
         body: SafeArea(
           top: false,
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             children: [
               Text(
-                'DriverLingo (LTO Exam Reviewer Mobile App with Hiligaynon Translation) is a capstone '
-                'project by BSIT students of West Visayas State University - Pototan Campus. For '
-                'questions, feedback, or to flag a question/answer that needs review, reach out to any '
-                'of the developers below.',
+                tr(context, 'contact_intro'),
                 style: TextStyle(color: p.textSecondary, fontSize: 15, height: 1.5),
               ),
               const SizedBox(height: 20),
-              const SectionLabel('Development team'),
+              SectionLabel(tr(context, 'contact_team')),
               AppCard(
                 child: Column(
                   children: [
@@ -68,7 +63,7 @@ class _DeveloperRow extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: developer.email));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Copied ${developer.email}'), duration: const Duration(seconds: 2)),
+      SnackBar(content: Text(trfRead(context, 'contact_copied', {'email': developer.email})), duration: const Duration(seconds: 2)),
     );
   }
 
@@ -80,7 +75,7 @@ class _DeveloperRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Row(
         children: [
-          AvatarBadge(initials: initialsOf(developer.name), size: 44),
+          const AvatarBadge(size: 44),
           const SizedBox(width: 14),
           Expanded(
             child: Column(

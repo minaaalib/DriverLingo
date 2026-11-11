@@ -1,12 +1,12 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/dio.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/api_client.dart';
 import '../models/question.dart';
 import 'offline_cache.dart';
 
 class QuestionService {
-  final Dio _dio = ApiClient.instance.dio;
+  SupabaseClient get _client => Supabase.instance.client;
 
   Future<bool> get _isOnline async {
     final result = await Connectivity().checkConnectivity();
@@ -15,28 +15,23 @@ class QuestionService {
 
   /// Fetches the reviewer question bank (with answers/explanations) for
   /// study purposes, transparently falling back to the offline cache
-  /// when there's no connection.
+  /// when there's no connection. Calls the list_questions() RPC
+  /// (supabase/migrations/0001_init.sql), which returns the whole bank
+  /// already localized in one call - no pagination needed.
   Future<List<ReviewerQuestion>> getReviewerQuestions({
     required String lang,
     String category = 'all',
   }) async {
     if (await _isOnline) {
       try {
-        final questions = <ReviewerQuestion>[];
-        String? nextUrl = '/questions/';
-        Map<String, dynamic>? query = {'lang': lang, if (category != 'all') 'category': category, 'page_size': 100};
-
-        while (nextUrl != null) {
-          final response = await _dio.get(nextUrl, queryParameters: query);
-          final data = response.data as Map<String, dynamic>;
-          questions.addAll((data['results'] as List).map((e) => ReviewerQuestion.fromJson(e as Map<String, dynamic>)));
-          nextUrl = data['next'] as String?;
-          query = null; // 'next' already contains the full querystring
-        }
-
+        final data = await _client.rpc('list_questions', params: {
+          'p_lang': lang,
+          'p_category': category == 'all' ? null : category,
+        });
+        final questions = (data as List).map((e) => ReviewerQuestion.fromJson(e as Map<String, dynamic>)).toList();
         await OfflineCache.instance.saveQuestionBank(questions, lang: lang, category: category);
         return questions;
-      } on DioException {
+      } catch (_) {
         return _fallbackToCache(lang, category);
       }
     }

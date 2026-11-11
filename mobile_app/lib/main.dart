@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants.dart';
-import 'screens/welcome_screen.dart';
+import 'screens/auth_gate.dart';
 import 'services/auth_service.dart';
 import 'services/language_service.dart';
 import 'services/theme_service.dart';
@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
     url: SupabaseConfig.url,
-    anonKey: SupabaseConfig.anonKey,
+    publishableKey: SupabaseConfig.publishableKey,
   );
   runApp(const LtoReviewerApp());
 }
@@ -36,7 +36,7 @@ class LtoReviewerApp extends StatelessWidget {
           themeMode: themePref.mode,
           theme: AppTheme.light(),
           darkTheme: AppTheme.dark(),
-          home: const WelcomeScreen(),
+          home: const StartupGate(),
         ),
       ),
     );

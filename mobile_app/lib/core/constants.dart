@@ -1,27 +1,10 @@
-/// Central place for API configuration.
-///
-/// For the Android emulator, `10.0.2.2` reaches the host machine's
-/// `localhost`, which is where `python manage.py runserver` listens by
-/// default. Point this at your real deployment's URL when you're not
-/// running the backend locally (see the backend README for deployment
-/// instructions).
-class ApiConfig {
-  ApiConfig._();
-
-  static const String baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000/api',
-  );
-
-  static const Duration connectTimeout = Duration(seconds: 15);
-  static const Duration receiveTimeout = Duration(seconds: 20);
-}
-
-/// Supabase project + Google Sign-In configuration.
+/// Supabase project + Google Sign-In configuration - Supabase is now the
+/// whole backend (Postgres + Auth), not just an identity bridge, so this
+/// replaces the old Django/Render ApiConfig entirely.
 ///
 /// Fill these in from your Supabase project (Settings > API) and Google
 /// Cloud OAuth client (APIs & Services > Credentials), then run with:
-///   flutter run --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=... --dart-define=GOOGLE_WEB_CLIENT_ID=...
+///   flutter run --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_PUBLISHABLE_KEY=... --dart-define=GOOGLE_WEB_CLIENT_ID=...
 class SupabaseConfig {
   SupabaseConfig._();
 
@@ -30,10 +13,11 @@ class SupabaseConfig {
     defaultValue: 'https://qthaaqfzbvjgtawzysyo.supabase.co',
   );
 
-  static const String anonKey = String.fromEnvironment(
-    'SUPABASE_ANON_KEY',
-    defaultValue:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0aGFhcWZ6YnZqZ3Rhd3p5c3lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwMzI0NzcsImV4cCI6MjEwNDYwODQ3N30.PqZKYDIP1-vE88Go5dKRM4DJKOkDSI1qiJKbNgkMtow',
+  /// Supabase publishable key (Settings > API Keys). Safe to ship in the
+  /// app; it replaces the legacy JWT "anon" key.
+  static const String publishableKey = String.fromEnvironment(
+    'SUPABASE_PUBLISHABLE_KEY',
+    defaultValue: 'sb_publishable_0OZSPi2Qp9ZbAjDQ3qp5LA_mp5sdiXF',
   );
 
   /// The "Web application" OAuth client ID from Google Cloud Console.
@@ -41,7 +25,7 @@ class SupabaseConfig {
   /// audience matches what Supabase (and the Django backend) expect.
   static const String googleWebClientId = String.fromEnvironment(
     'GOOGLE_WEB_CLIENT_ID',
-    defaultValue: 'REPLACE_WITH_GOOGLE_WEB_CLIENT_ID',
+    defaultValue: '711468730862-0vik098qe0rofh4fk4b06440er7u7q1f.apps.googleusercontent.com',
   );
 }
 
@@ -85,6 +69,13 @@ class ExamCategory {
   /// Every mock exam is timed at a flat 60 minutes, matching the LTO's
   /// standard non-professional exam duration. Not user-adjustable.
   static const int standardTimerMinutes = 60;
+
+  /// Item count and time limit for the short, mandatory practice exam a
+  /// new user takes during onboarding (see OnboardingScreen) - deliberately
+  /// much shorter than [standardCounts] so it reads as a quick first taste
+  /// of the exam format rather than a full attempt.
+  static const int onboardingPracticeCount = 5;
+  static const int onboardingPracticeTimerMinutes = 5;
 }
 
 class AppLanguage {

@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import '../core/app_strings.dart';
 import 'app_theme.dart';
 
 class _NavItem {
-  const _NavItem(this.icon, this.labelKey);
+  const _NavItem(this.icon, this.activeIcon, this.labelKey);
   final IconData icon;
+  final IconData activeIcon;
   final String labelKey;
 }
 
 const _navItems = [
-  _NavItem(SolarIconsOutline.home2, 'nav_home'),
-  _NavItem(SolarIconsOutline.history, 'nav_history'),
-  _NavItem(SolarIconsOutline.userRounded, 'nav_profile'),
-  _NavItem(SolarIconsOutline.settings, 'nav_settings'),
+  _NavItem(SolarIconsOutline.home2, SolarIconsBold.home2, 'nav_home'),
+  _NavItem(SolarIconsOutline.history, SolarIconsBold.history, 'nav_history'),
+  _NavItem(SolarIconsOutline.userRounded, SolarIconsBold.userRounded, 'nav_profile'),
+  _NavItem(SolarIconsOutline.settings, SolarIconsBold.settings, 'nav_settings'),
 ];
 
-/// Soft neumorphic bottom navigation bar: the whole bar reads as a panel
-/// raised off the page (a paired light/dark shadow rather than a border),
-/// and the active tab looks pressed into that panel instead of pill-filled.
-/// Every tab always shows its label underneath the icon.
+const _animDuration = Duration(milliseconds: 320);
+const _animCurve = Curves.easeOutCubic;
+
+/// Floating clay bottom navigation bar. Inactive tabs are just an icon;
+/// the active tab grows into a raised blue clay pill showing a filled icon
+/// and its label, and the pill glides between tabs when switching.
 class AppBottomNav extends StatelessWidget {
   const AppBottomNav({super.key, required this.currentIndex, required this.onTap});
   final int currentIndex;
@@ -29,41 +33,45 @@ class AppBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    final dark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
+    // Soft fade behind the floating bar so page content scrolling
+    // underneath dissolves into the background instead of peeking out.
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: p.bg,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [
-          BoxShadow(
-            color: dark ? Colors.black.withValues(alpha: 0.55) : Colors.black.withValues(alpha: 0.12),
-            blurRadius: 22,
-            offset: const Offset(0, -8),
-          ),
-          BoxShadow(
-            color: dark ? Colors.white.withValues(alpha: 0.04) : Colors.white.withValues(alpha: 0.9),
-            blurRadius: 14,
-            offset: const Offset(0, -2),
-          ),
-        ],
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [p.bg.withValues(alpha: 0), p.bg.withValues(alpha: 0.85), p.bg],
+          stops: const [0, 0.45, 1],
+        ),
       ),
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 16, 10, 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(_navItems.length, (i) {
-              final item = _navItems[i];
-              return _NeuNavButton(
-                icon: item.icon,
-                label: tr(context, item.labelKey),
-                selected: i == currentIndex,
-                dark: dark,
-                onTap: () => onTap(i),
-              );
-            }),
+          padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
+          child: Container(
+            height: 72,
+            padding: const EdgeInsets.all(8),
+            decoration: Clay.box(p, color: p.navBg, radius: 36, depth: 1.2),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: List.generate(_navItems.length, (i) {
+                final item = _navItems[i];
+                final selected = i == currentIndex;
+                return AnimatedFlexible(
+                  flex: selected ? 5 : 2,
+                  child: _NavTab(
+                    icon: selected ? item.activeIcon : item.icon,
+                    label: tr(context, item.labelKey),
+                    selected: selected,
+                    onTap: () {
+                      if (!selected) HapticFeedback.selectionClick();
+                      onTap(i);
+                    },
+                  ),
+                );
+              }),
+            ),
           ),
         ),
       ),
@@ -71,72 +79,94 @@ class AppBottomNav extends StatelessWidget {
   }
 }
 
-class _NeuNavButton extends StatelessWidget {
-  const _NeuNavButton({
+/// Animates a tab's share of the bar width so the active pill smoothly
+/// widens while the others shrink.
+class AnimatedFlexible extends StatelessWidget {
+  const AnimatedFlexible({super.key, required this.flex, required this.child});
+  final int flex;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(end: flex.toDouble()),
+      duration: _animDuration,
+      curve: _animCurve,
+      builder: (context, value, child) => Expanded(flex: (value * 100).round(), child: child!),
+      child: child,
+    );
+  }
+}
+
+class _NavTab extends StatelessWidget {
+  const _NavTab({
     required this.icon,
     required this.label,
     required this.selected,
-    required this.dark,
     required this.onTap,
   });
 
   final IconData icon;
   final String label;
   final bool selected;
-  final bool dark;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    // textTertiary reads too faint against the near-black dark background;
-    // textSecondary keeps unselected tabs legible without the fully bright
-    // "selected" color.
-    final unselectedColor = dark ? p.textSecondary : p.textTertiary;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        width: 70,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          // Must differ from the bar's own background (p.bg) or the
-          // pressed-in shadows below have nothing to read against.
-          color: selected ? p.surfaceElevated : null,
-          boxShadow: selected
-              ? [
-                  // Pressed-in look: dark shadow on the light-source side,
-                  // faint highlight on the opposite side.
-                  BoxShadow(
-                    color: dark ? Colors.black.withValues(alpha: 0.55) : Colors.black.withValues(alpha: 0.14),
-                    blurRadius: 6,
-                    offset: const Offset(3, 3),
+    final idleColor = p.isDark ? p.textSecondary : p.textTertiary;
+
+    return Semantics(
+      selected: selected,
+      button: true,
+      label: label,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: _animDuration,
+          curve: _animCurve,
+          margin: const EdgeInsets.symmetric(horizontal: 2),
+          decoration: selected
+              ? Clay.accent(p.primary, radius: 28, depth: 0.55)
+              : const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(28))),
+          child: ClipRect(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedScale(
+                  scale: selected ? 1.0 : 0.92,
+                  duration: _animDuration,
+                  curve: _animCurve,
+                  child: Icon(icon, size: 24, color: selected ? Colors.white : idleColor),
+                ),
+                // Label slides open only on the active tab.
+                Flexible(
+                  child: AnimatedSize(
+                    duration: _animDuration,
+                    curve: _animCurve,
+                    child: selected
+                        ? Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              label,
+                              maxLines: 1,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ),
-                  BoxShadow(
-                    color: dark ? Colors.white.withValues(alpha: 0.12) : Colors.white.withValues(alpha: 0.9),
-                    blurRadius: 6,
-                    offset: const Offset(-3, -3),
-                  ),
-                ]
-              : null,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 24, color: selected ? p.primary : unselectedColor),
-            const SizedBox(height: 5),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-                color: selected ? p.primary : unselectedColor,
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

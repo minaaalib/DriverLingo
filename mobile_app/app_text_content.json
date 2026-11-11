@@ -1,0 +1,228 @@
+{
+  "_meta": {
+    "app": "DriverLingo (LTO Exam Reviewer Mobile App with Hiligaynon Translation)",
+    "generated": "2026-09-18",
+    "sources": [
+      "lib/core/app_strings.dart (translated short UI strings, keyed, looked up via tr()/trf())",
+      "lib/screens/settings_screen.dart (How the system works / Privacy policy / Terms & conditions bodies - English only)",
+      "lib/screens/faq_screen.dart (FAQ question/answer pairs - English only)",
+      "lib/screens/contact_screen.dart (Contact page copy + dev team - English only)",
+      "lib/screens/reviewer_screen.dart, lib/screens/welcome_screen.dart, lib/screens/login_screen.dart, lib/screens/profile_screen.dart, lib/main.dart (misc hardcoded labels not in the translation table)"
+    ],
+    "notes": "Two kinds of text: (1) translated strings that go through AppStrings/tr()/trf() and exist in en/fil/hil, and (2) static, English-only long-form or literal text hardcoded directly in the widget tree. '{n}', '{a}', '{b}', etc. are runtime placeholders substituted at render time."
+  },
+
+  "app": {
+    "name": { "note": "hardcoded, not translated", "value": "DriverLingo" },
+    "window_title": { "note": "MaterialApp title, main.dart", "value": "DriverLingo" }
+  },
+
+  "bottom_navigation": {
+    "nav_home": { "en": "Home", "fil": "Home", "hil": "Balay" },
+    "nav_history": { "en": "History", "fil": "Kasaysayan", "hil": "Kasaysayan" },
+    "nav_profile": { "en": "Profile", "fil": "Profile", "hil": "Profile" },
+    "nav_settings": { "en": "Settings", "fil": "Mga Setting", "hil": "Mga Setting" }
+  },
+
+  "common_actions": {
+    "action_translate": { "en": "Translate", "fil": "Isalin", "hil": "Baylo Lenggwahe" },
+    "action_cancel": { "en": "Cancel", "fil": "Kanselahin", "hil": "Kanselahon" }
+  },
+
+  "welcome_screen": {
+    "brand_name": { "note": "hardcoded, not translated", "value": "DriverLingo" },
+    "welcome_badge": { "en": "LTO Reviewer", "fil": "LTO Reviewer", "hil": "LTO Reviewer" },
+    "welcome_choose_language": { "en": "CHOOSE YOUR LANGUAGE", "fil": "PILIIN ANG WIKA", "hil": "PILIA ANG LENGGWAHE" },
+    "welcome_continue": { "en": "Continue", "fil": "Magpatuloy", "hil": "Padayon" },
+    "welcome_quote_1": { "en": "Every Mile Begins\nWith Confidence.", "fil": "Bawat Milya ay\nNagsisimula sa Tiwala.", "hil": "Ang Kada Milya\nNagasugod sa Pagsalig." },
+    "welcome_quote_2": { "en": "Master The Road.\nMaster The Exam.", "fil": "Bihasain ang Daan.\nBihasain ang Pagsusulit.", "hil": "Batunon ang Dalan.\nBatunon ang Ekzaminasyon." },
+    "welcome_quote_3": { "en": "Your License,\nYour Language.", "fil": "Iyong Lisensya,\nIyong Wika.", "hil": "Imo Lisensya,\nImo Lenggwahe." },
+    "welcome_quote_4": { "en": "Practice Today.\nDrive Tomorrow.", "fil": "Magsanay Ngayon.\nMagmaneho Bukas.", "hil": "Pagpraktis Karon.\nPagmaneho Buas." }
+  },
+
+  "onboarding_screen": {
+    "note": "Pushed on top of RootShell right after a new user's first login (detected as: exam history is empty). Mandatory - canPop is false; the only way through is completing the practice exam. Shows the same step content as settings_screen's 'How the system works' (static_english_only_content.how_the_system_works), followed by a Start Practice Exam button.",
+    "onboarding_title": { "en": "Welcome to DriverLingo!", "fil": "Maligayang pagdating sa DriverLingo!", "hil": "Maayong pag-abot sa DriverLingo!" },
+    "onboarding_subtitle": { "en": "Before your first practice exam, here's a quick look at how everything works.", "fil": "Bago ang iyong unang pang-ensayong pagsusulit, narito ang mabilisang gabay kung paano gumagana ang lahat.", "hil": "Antes sang imo una nga pang-ensayo nga ekzaminasyon, ari ang madasig nga pagtan-aw kon paano nagaobra ang tanan." },
+    "onboarding_cta": { "en": "Start Practice Exam", "fil": "Simulan ang Pang-ensayong Pagsusulit", "hil": "Sugdan ang Pang-ensayo nga Ekzaminasyon" }
+  },
+
+  "consent_dialog": {
+    "note": "Shown on the welcome screen after the user taps Continue; must tap 'I Agree' before reaching the login screen (AuthGate).",
+    "consent_dialog_title": { "en": "Before you continue", "fil": "Bago magpatuloy", "hil": "Antes magpadayon" },
+    "consent_dialog_message": { "en": "By continuing, you agree to DriverLingo's Terms & Conditions and Privacy Policy.", "fil": "Sa pagpapatuloy, sumasang-ayon ka sa Mga Tuntunin at Kundisyon at Patakarang Pampribado ng DriverLingo.", "hil": "Paagi sa pagpadayon, nagakasugot ka sa Mga Kasugtanan kag Kundisyon kag Palisiya Pampribado sang DriverLingo." },
+    "consent_agree": { "en": "I Agree", "fil": "Sumasang-ayon Ako", "hil": "Nagakasugot Ako" },
+    "consent_decline": { "en": "Cancel", "fil": "Kanselahin", "hil": "Kanselahon" }
+  },
+
+  "login_screen": {
+    "brand_name": { "note": "hardcoded, not translated", "value": "DriverLingo" },
+    "login_continue_google": { "en": "Continue with Google", "fil": "Magpatuloy gamit ang Google", "hil": "Padayon gamit ang Google" },
+    "login_continue_google_loading": { "en": "Signing in...", "fil": "Naglo-log in...", "hil": "Nagalog in..." }
+  },
+
+  "home_screen": {
+    "home_ready_to_practice": { "en": "Ready to practice?", "fil": "Handa nang magsanay?", "hil": "Handa na maghanas?" },
+    "home_default_name": { "en": "Driver", "fil": "Drayber", "hil": "Drayber" },
+    "home_momentum_title": { "en": "Keep up the\nmomentum!", "fil": "Ipagpatuloy ang\nsigla!", "hil": "Ipadayon ang\nkusog kag gana!" },
+    "home_first_exam_title": { "en": "Take your\nfirst mock exam!", "fil": "Kunin ang iyong\nunang Pang-ensayong Pagsusulit!", "hil": "Kuhaa ang imo\nuna nga Pang-ensayo nga Ekzaminasyon!" },
+    "home_no_attempts": { "en": "No attempts yet", "fil": "Wala pang tangka", "hil": "Wala pa gid nagtilaw" },
+    "home_best": { "en": "Best", "fil": "Pinakamataas", "hil": "Pinakamataas" },
+    "home_day_streak": { "en": "{n}-day streak", "fil": "{n} sunod-sunod na araw", "hil": "{n} ka sunod-sunod nga adlaw" },
+    "home_overall_readiness": { "en": "OVERALL READINESS", "fil": "KABUUANG KAHANDAAN", "hil": "KABUOAN NGA PAGKAHANDA" },
+    "home_exam_category": { "en": "Exam category", "fil": "Kategorya ng pagsusulit", "hil": "Kategorya sang Ekzaminasyon" },
+    "home_items_standard": { "en": "items · LTO standard", "fil": "items · pamantayan ng LTO", "hil": "items · pagsulundan sang LTO" },
+    "home_questions_label": { "en": "QUESTIONS", "fil": "MGA TANONG", "hil": "MGA PAMANGKOT" },
+    "home_timer_label": { "en": "TIMER", "fil": "ORAS", "hil": "ORAS" },
+    "home_start_exam": { "en": "Start Mock Exam", "fil": "Simulan ang Pang-ensayong Pagsusulit", "hil": "Sugdan ang Pang-ensayo nga Ekzaminasyon" },
+    "home_starting": { "en": "Starting...", "fil": "Sinisimulan...", "hil": "Ginasugdan..." },
+    "home_sheet_title": { "en": "Number of questions", "fil": "Bilang ng mga tanong", "hil": "Kadamu sang mga pamangkot" },
+    "home_custom_switch": { "en": "Use a custom number", "fil": "Gumamit ng custom na bilang", "hil": "Gamiton ang custom nga numero" },
+    "home_custom_value": { "en": "Custom", "fil": "Custom", "hil": "Custom" },
+    "home_standard_value": { "en": "Standard", "fil": "Standard", "hil": "Standard" },
+    "home_done": { "en": "Done", "fil": "Tapos na", "hil": "Tapos na" }
+  },
+
+  "exam_screen": {
+    "exam_question_of": { "en": "Question {a} of {b}", "fil": "Tanong {a} ng {b}", "hil": "Pamangkot {a} sang {b}" },
+    "exam_previous": { "en": "Previous", "fil": "Nakaraan", "hil": "Nagligad" },
+    "exam_next": { "en": "Next", "fil": "Susunod", "hil": "Sunod" },
+    "exam_submit_progress": { "en": "Submit", "fil": "Ipasa", "hil": "Ipasa" },
+    "exam_submitting": { "en": "Submitting...", "fil": "Pinapasa...", "hil": "Ginapasa..." },
+    "exam_submit_dialog_title": { "en": "Submit exam?", "fil": "Isumite ang pagsusulit?", "hil": "Ipasa ang ekzaminasyon?" },
+    "exam_answered_count": { "en": "You answered {a} of {b} questions.", "fil": "Nasagot mo ang {a} sa {b} na tanong.", "hil": "Ginsabat mo ang {a} sa {b} ka pamangkot." },
+    "exam_unanswered_note": { "en": "Unanswered questions will be marked incorrect. Submit anyway?", "fil": "Ang mga hindi nasagot na tanong ay ituturing na mali. Ipasa pa rin?", "hil": "Ang mga wala matsabat nga pamangkot markahan nga sala. Ipasa gihapon?" },
+    "exam_keep_answering": { "en": "Keep answering", "fil": "Ipagpatuloy ang pagsagot", "hil": "Padayon sa pagsabat" },
+    "exam_submit_button": { "en": "Submit", "fil": "Ipasa", "hil": "Ipasa" },
+    "exam_leave_dialog_title": { "en": "Leave exam?", "fil": "Liliban sa pagsusulit?", "hil": "Bayaan ang ekzaminasyon?" },
+    "exam_leave_dialog_body": { "en": "Your progress on this attempt will be lost.", "fil": "Mawawala ang iyong progreso sa pagsusulit na ito.", "hil": "Madula ang imo progreso sa sini nga ekzaminasyon." },
+    "exam_stay": { "en": "Stay", "fil": "Manatili", "hil": "Magpabilin" },
+    "exam_leave": { "en": "Leave", "fil": "Umalis", "hil": "Halin" }
+  },
+
+  "results_screen": {
+    "results_back_home": { "en": "Back to Home", "fil": "Bumalik sa Home", "hil": "Balik sa Home" },
+    "results_translate_tooltip": { "en": "Translate the review", "fil": "Isalin ang rebyu", "hil": "Baylo lenggwahe sang rebyu" },
+    "results_title": { "en": "Exam Results", "fil": "Resulta ng Pagsusulit", "hil": "Resulta sang Ekzaminasyon" },
+    "results_passed": { "en": "PASSED", "fil": "PUMASA", "hil": "NAKAPASAR" },
+    "results_needs_review": { "en": "NEEDS MORE REVIEW", "fil": "KAILANGAN PA NG REBYU", "hil": "KINAHANGLAN PA SING REBYU" },
+    "results_review_answers": { "en": "Review your answers", "fil": "Suriin ang iyong mga sagot", "hil": "Usisaon ang imo mga sabat" },
+    "results_retake": { "en": "Take Test Again", "fil": "Ulitin ang Pagsusulit", "hil": "Magliwat sang Ekzaminasyon" }
+  },
+
+  "history_screen": {
+    "history_title": { "en": "Exam History", "fil": "Kasaysayan ng Pagsusulit", "hil": "Kasaysayan sang Ekzaminasyon" },
+    "history_failed_load": { "en": "Failed to load history.", "fil": "Hindi na-load ang kasaysayan.", "hil": "Wala na-load ang kasaysayan." },
+    "history_empty": { "en": "No mock exams taken yet. Go take one!", "fil": "Wala ka pang nakuhang pang-ensayong pagsusulit. Kumuha na!", "hil": "Wala ka pa sing na-agyan nga pang-ensayo nga ekzaminasyon. Kuha na!" },
+    "history_correct": { "en": "correct", "fil": "tama", "hil": "husto" }
+  },
+
+  "profile_screen": {
+    "profile_title": { "en": "Profile", "fil": "Profile", "hil": "Profile" },
+    "profile_admin": { "en": "Admin", "fil": "Admin", "hil": "Admin" },
+    "profile_examinee": { "en": "Examinee", "fil": "Tagakuha ng Pagsusulit", "hil": "Tagkuha sang Ekzaminasyon" },
+    "profile_verified": { "en": "Verified", "fil": "Beripikado", "hil": "Beripikado" },
+    "profile_about": { "en": "About", "fil": "Tungkol", "hil": "Parte" },
+    "profile_languages": { "en": "Languages", "fil": "Mga Wika", "hil": "Mga Lenggwahe" },
+    "profile_languages_value": { "note": "hardcoded, not translated", "value": "English · Filipino · Hiligaynon" },
+    "profile_content": { "en": "Content", "fil": "Nilalaman", "hil": "Kasuludan" },
+    "profile_content_value": { "en": "LTO reviewer questions", "fil": "tanong sa LTO reviewer", "hil": "mga pamangkot sa LTO reviewer", "note": "rendered as '101 {profile_content_value}'" },
+    "profile_app": { "en": "App", "fil": "App", "hil": "App" },
+    "profile_app_value": { "note": "hardcoded, not translated", "value": "DriverLingo v1.0.0" },
+    "profile_logout": { "en": "Log out", "fil": "Mag-log out", "hil": "Mag-log out" },
+    "profile_logout_confirm_title": { "en": "Log out?", "fil": "Mag-log out?", "hil": "Mag-log out?" },
+    "profile_logout_confirm_body": { "en": "You can log back in any time.", "fil": "Puwede kang mag-log in ulit anumang oras.", "hil": "Pwede ka gid magbalik log in bisan san-o." }
+  },
+
+  "settings_screen": {
+    "settings_title": { "en": "Settings", "fil": "Mga Setting", "hil": "Mga Setting" },
+    "settings_appearance": { "en": "Appearance", "fil": "Hitsura", "hil": "Hitsura" },
+    "settings_system_default": { "en": "System default", "fil": "Default ng sistema", "hil": "Default sang sistema" },
+    "settings_light": { "en": "Light", "fil": "Maliwanag", "hil": "Masanag" },
+    "settings_dark": { "en": "Dark", "fil": "Madilim", "hil": "Madulom" },
+    "settings_reviewer_language": { "en": "Reviewer language", "fil": "Wika ng Reviewer", "hil": "Lenggwahe sang Reviewer" },
+    "settings_support_legal": { "en": "Support & legal", "fil": "Suporta at Legal", "hil": "Suporta kag Legal" },
+    "settings_how_it_works": { "en": "How the system works", "fil": "Paano gumagana ang sistema", "hil": "Paano nagagamit ang sistema" },
+    "settings_faqs": { "en": "FAQs", "fil": "FAQs", "hil": "FAQs" },
+    "settings_privacy": { "en": "Privacy policy", "fil": "Patakarang Pampribado", "hil": "Palisiya Pampribado" },
+    "settings_terms": { "en": "Terms & conditions", "fil": "Mga Tuntunin at Kundisyon", "hil": "Mga Kasugtanan kag Kundisyon" },
+    "settings_contact": { "en": "Contact us", "fil": "Kontakin kami", "hil": "Kontaka kami" }
+  },
+
+  "reviewer_screen": {
+    "note": "Untimed 'browse the question bank' study mode. All hardcoded, English only.",
+    "title": "Reviewer",
+    "error_fallback": "Failed to load the reviewer.",
+    "empty_state": "No questions available yet."
+  },
+
+  "static_english_only_content": {
+    "note": "Long-form pages are intentionally out of scope of the translation table (per app_strings.dart doc comment) and stay English-only.",
+
+    "how_the_system_works": {
+      "title": "How the system works",
+      "intro": "DriverLingo helps aspiring drivers prepare for the LTO non-professional and professional driver's license exams in English, Filipino, or Hiligaynon.",
+      "sections": [
+        { "heading": "1. Create an account", "body": "Sign up with your name, email, and a password, or log in to an existing account. Your account keeps your exam history and progress saved across sessions." },
+        { "heading": "2. Choose your language", "body": "Pick English, Filipino, or Hiligaynon at any time. Every question, answer choice, and explanation is available in all three languages so you can review in whichever one you understand best." },
+        { "heading": "3. Take a mock exam", "body": "Answer timed practice questions drawn from the LTO reviewer question bank, covering road signs, traffic laws and regulations, and safe driving practices for non-professional and professional license categories." },
+        { "heading": "4. Review your results", "body": "After submitting, see your score, your pass/fail status, and a full breakdown of every question with the correct answer and an explanation - so mistakes turn into something learned." },
+        { "heading": "5. Track your progress", "body": "Every attempt is saved to your Exam History, so you can look back at previous scores and see how you're improving over time." },
+        { "heading": "6. Study offline", "body": "Once you've opened the reviewer questions while online, they're cached on your device so you can keep practicing even without an internet connection." },
+        { "heading": "Behind the scenes", "body": "Administrators maintain and update the question bank and manage user accounts to keep the reviewer accurate and up to date." }
+      ]
+    },
+
+    "privacy_policy": {
+      "title": "Privacy policy",
+      "intro": "We know studying for your license already means sharing enough paperwork with the government. Here's exactly what DriverLingo collects and why.",
+      "sections": [
+        { "heading": "Information we collect", "body": "When you register, we collect your name, email address, and a securely hashed password. As you use the app, we also store your chosen reviewer language and your mock exam attempts (answers, scores, and timestamps)." },
+        { "heading": "How we use it", "body": "Your account details let you log in and keep your progress across devices. Your exam history lets you review past attempts and track improvement. We do not use your data for advertising, and we do not sell or share it with third parties." },
+        { "heading": "Offline data", "body": "Reviewer questions downloaded for offline use are cached locally on your device only, and are not shared with anyone else." },
+        { "heading": "Data storage & security", "body": "Your information is stored on our servers with hashed passwords and access limited to the development team maintaining the app. This app was built as an academic capstone project, so please avoid submitting sensitive personal information beyond what registration requires." },
+        { "heading": "Your rights", "body": "In line with the Philippine Data Privacy Act of 2012 (RA 10173), you may request access to, correction of, or deletion of your personal data at any time by reaching out through Contact Us." },
+        { "heading": "Changes to this policy", "body": "This policy may be updated as the app evolves. Continued use of DriverLingo after changes are posted means you accept the updated policy." }
+      ]
+    },
+
+    "terms_and_conditions": {
+      "title": "Terms & conditions",
+      "intro": "By using DriverLingo, you agree to the following terms.",
+      "sections": [
+        { "heading": "About this app", "body": "DriverLingo is an independent study aid developed as a BSIT capstone project by students of West Visayas State University - Pototan Campus. It is not affiliated with, endorsed by, or connected to the Land Transportation Office (LTO)." },
+        { "heading": "Content accuracy", "body": "We strive to keep questions, answers, and explanations accurate, but some entries are still undergoing verification against official LTO references. DriverLingo is meant to complement, not replace, official LTO reviewer materials - always confirm critical information with an authoritative source before your actual exam." },
+        { "heading": "Your account", "body": "You are responsible for the accuracy of the information you provide and for keeping your login credentials secure. Do not share your account with others." },
+        { "heading": "Acceptable use", "body": "Use DriverLingo only for personal exam preparation. Do not attempt to copy, resell, or redistribute the reviewer content, and do not misuse the app in a way that disrupts the service for other users." },
+        { "heading": "Limitation of liability", "body": "DriverLingo is provided as a study tool, \"as is,\" with no guarantee of exam results. The development team is not liable for outcomes of your actual LTO exam or for decisions made based solely on this app's content." },
+        { "heading": "Changes to these terms", "body": "These terms may be updated as the app is improved. Continued use of the app after changes are posted means you accept the updated terms." }
+      ]
+    },
+
+    "faqs": {
+      "title": "FAQs",
+      "items": [
+        { "question": "What is DriverLingo?", "answer": "DriverLingo (LTO Exam Reviewer Mobile App with Hiligaynon Translation) is a mock-exam reviewer that helps aspiring drivers prepare for the LTO written exam in English, Filipino, or Hiligaynon." },
+        { "question": "Is this an official LTO app?", "answer": "No. DriverLingo is an independent study aid built as a BSIT capstone project by students of West Visayas State University - Pototan Campus. It is not affiliated with, endorsed by, or connected to the Land Transportation Office." },
+        { "question": "Why Hiligaynon?", "answer": "Existing LTO reviewers are only available in English and Filipino, which leaves out Ilonggo/Hiligaynon speakers who are less comfortable in either language. DriverLingo translates every question, choice, and explanation into Hiligaynon so more drivers can prepare with confidence." },
+        { "question": "Does the app work offline?", "answer": "Yes. Once you have opened the reviewer questions at least once while online, they are cached on your device so you can keep studying without an internet connection." },
+        { "question": "Is DriverLingo free?", "answer": "Yes, DriverLingo is free to use." },
+        { "question": "How accurate are the questions and answers?", "answer": "Content is sourced from LTO reviewer materials, but some entries are still being verified against official references. If you notice an answer that looks incorrect, please let us know through Contact Us so it can be corrected." },
+        { "question": "Can I retake a mock exam?", "answer": "Yes, you can take as many mock exams as you like. Note that this is different from the real LTO exam, where failing three official attempts means a two-year wait before you can reapply." },
+        { "question": "Some Hiligaynon text still shows English or Filipino words - why?", "answer": "A few technical and legal terms used in traffic law do not have a direct Hiligaynon equivalent, so they are kept in their original language for clarity." },
+        { "question": "What devices does DriverLingo support?", "answer": "DriverLingo currently runs on Android phones and tablets." },
+        { "question": "How do I switch between light and dark mode?", "answer": "Go to Settings > Appearance and choose System default, Light, or Dark." }
+      ]
+    },
+
+    "contact_us": {
+      "title": "Contact Us",
+      "intro": "DriverLingo (LTO Exam Reviewer Mobile App with Hiligaynon Translation) is a mock-exam reviewer that helps aspiring drivers prepare for the LTO written exam in English, Filipino, or Hiligaynon. For questions, feedback, or to flag a question/answer that needs review, reach out to any of the developers below.",
+      "section_label": "Development team",
+      "developers": [
+        { "name": "Dr. Rosie Jane P. Siosan", "email": "rosiejane.siosan@wvsu.edu.ph" }
+      ],
+      "copy_email_toast": "Copied {email}"
+    }
+  }
+}
